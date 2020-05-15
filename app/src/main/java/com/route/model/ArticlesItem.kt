@@ -1,4 +1,4 @@
-package com.route.data
+package com.route.model
 
 import com.google.gson.annotations.SerializedName
 

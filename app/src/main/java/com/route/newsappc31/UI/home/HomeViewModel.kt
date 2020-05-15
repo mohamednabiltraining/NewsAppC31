@@ -3,14 +3,17 @@ package com.route.newsappc31.UI.home
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.route.Api.ApiManager
-import com.route.data.ArticlesItem
-import com.route.data.NewsResponse
-import com.route.data.SourcesItem
-import com.route.data.SourcesResponse
+import com.route.model.ArticlesItem
+import com.route.model.SourcesItem
 import com.route.newsappc31.Constants
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.route.newsappc31.NetworkAwareHandler
+import com.route.repositories.sources.NewsSourcesRepo
+import com.route.repositories.sources.OfflineSourcesRoomBased
+import com.route.repositories.sources.OnlineSourcesBasedRetroFit
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 
 
 /**
@@ -19,63 +22,61 @@ import retrofit2.Response
  */
 class HomeViewModel : ViewModel(){
 
-    val sourcesLiveData = MutableLiveData< List<SourcesItem?>>()
+
+    lateinit var sourcesLiveData : MutableLiveData< List<SourcesItem>>
+
     val showLoadingLiveData  = MutableLiveData<Boolean>()
     val messageStringLiveData = MutableLiveData<String>()
     val newsList =MutableLiveData<List<ArticlesItem?>>()
+    val compositeDisposable = CompositeDisposable();
+    lateinit var networkAwareHandler:NetworkAwareHandler
 
-    fun getNewsSources() {
-      //  showLoadingDialog(getString(R.string.loading))
-        showLoadingLiveData.value =true
+    lateinit var newsSourcesRepo:NewsSourcesRepo
 
-        ApiManager.getApis()
-            .getNewsSources(Constants.apiKey,"en")
-            .enqueue(object : Callback<SourcesResponse> {
-                override fun onResponse(
-                    call: Call<SourcesResponse>,
-                    response: Response<SourcesResponse>
-                ) {
-                    showLoadingLiveData.value = false
-                    //         hideLoadingDialog()
-               //     setUpTabLayout(response.body()?.sources)
-                    sourcesLiveData.value = response.body()?.sources
-                }
+    init {
+        networkAwareHandler =object :NetworkAwareHandler{
+            override fun isOnline(): Boolean {
+            return true;
+            }
+        }
 
-                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-                    showLoadingLiveData.value = false
-                    //   hideLoadingDialog()
-//                    showMessage("",t.localizedMessage,null,null, null,null,true)
-                    messageStringLiveData.value = t.localizedMessage
-                }
-            })
+        newsSourcesRepo = NewsSourcesRepo(OfflineSourcesRoomBased(),OnlineSourcesBasedRetroFit(),
+            networkAwareHandler)
+        sourcesLiveData = newsSourcesRepo.sourcesList
+        newsSourcesRepo.getNewsSources()
     }
 
+    fun getNewsSources() {
+        showLoadingLiveData.value =true
+        newsSourcesRepo.getNewsSources()
+    }
+
+    val errorHandler = Consumer<Throwable> {
+        showLoadingLiveData.value=false
+        messageStringLiveData.value = it.localizedMessage
+
+    } ;
     fun getNewsBySourceId(sourceID:String){
         //showLoadingDialog(getString(R.string.loading))
         showLoadingLiveData.value = true
-        ApiManager.getApis().getNews(
+        val disposable =ApiManager.getApis().getNews(
             Constants.apiKey,"en",
             sourceID)
-            .enqueue(object :Callback<NewsResponse>{
-                override fun onResponse(
-                    call: Call<NewsResponse>,
-                    response: Response<NewsResponse>
-                ) {
-                    showLoadingLiveData.value=false
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(Consumer {
+                showLoadingLiveData.value=false
 //                    hideLoadingDialog()
-                    //send id to recycler view adapter
-                     //response.body().articles
-                    newsList.value = response.body()?.articles
-                }
+                //send id to recycler view adapter
+                //response.body().articles
+                newsList.value = it.articles
 
-                override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                  //  hideLoadingDialog()
-                   showLoadingLiveData.value=false
-//                    showMessage("",t.localizedMessage,null,null, null,null,true)
-                    messageStringLiveData.value = t.localizedMessage
-
-                }
-            })
+            }, this.errorHandler)
+        compositeDisposable.add(disposable)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 }

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.route.data.ArticlesItem
+import com.route.model.ArticlesItem
 import com.route.newsappc31.R
 import com.route.newsappc31.databinding.ItemNewsBinding
 

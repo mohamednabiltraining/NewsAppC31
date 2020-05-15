@@ -1,8 +1,8 @@
 package com.route.Api
 
-import com.route.data.NewsResponse
-import com.route.data.SourcesResponse
-import retrofit2.Call
+import com.route.model.NewsResponse
+import com.route.model.SourcesResponse
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,11 +15,11 @@ interface WebServices {
     //sources
     @GET("sources")
     fun getNewsSources(@Query("apiKey") apiKey:String,
-                       @Query("language") lang:String): Call<SourcesResponse>
+                       @Query("language") lang:String): Single<SourcesResponse>
 
     @GET("everything")
     fun getNews(@Query("apiKey") apiKey:String,
                 @Query("language") lang:String,
-                @Query("sources") sources:String):Call<NewsResponse>
+                @Query("sources") sources:String):Single<NewsResponse>
 
 }

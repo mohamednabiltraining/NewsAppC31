@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
-import com.route.data.SourcesItem
+import com.route.model.SourcesItem
 import com.route.newsappc31.R
 import com.route.newsappc31.databinding.ActivityHomeBinding
 import com.route.notesapp.Base.BaseActivity
@@ -33,6 +33,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding,HomeViewModel>(), TabLayou
 
     fun observeLiveData() {
         viewModel.sourcesLiveData.observe(this, Observer {
+            hideLoadingDialog()
             setUpTabLayout(it)
         })
         viewModel.showLoadingLiveData.observe(this, Observer {
