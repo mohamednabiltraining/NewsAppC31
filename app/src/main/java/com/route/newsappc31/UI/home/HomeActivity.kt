@@ -12,7 +12,11 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseActivity<ActivityHomeBinding,HomeViewModel>(), TabLayout.OnTabSelectedListener {
 
+   // val myViewModel : HomeViewModel by viewModel();
+
+
     override fun generateViewModel(): HomeViewModel {
+//        return myViewModel
         return ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 

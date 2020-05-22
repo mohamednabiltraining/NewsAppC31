@@ -8,13 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
+import org.koin.core.KoinComponent
 
 
 /**
  * Created by Mohamed Nabil Mohamed on 2/21/2020.
  * m.nabil.fci2015@gmail.com
  */
-open abstract class BaseActivity<T :ViewDataBinding  , V: ViewModel> :AppCompatActivity() {
+open abstract class BaseActivity<T :ViewDataBinding  , V: ViewModel> :AppCompatActivity(),
+    KoinComponent {
     lateinit var activity: AppCompatActivity;
 
     lateinit var  viewDataBinding: T

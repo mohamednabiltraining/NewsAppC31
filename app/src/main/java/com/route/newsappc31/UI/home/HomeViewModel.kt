@@ -6,21 +6,20 @@ import com.route.Api.ApiManager
 import com.route.model.ArticlesItem
 import com.route.model.SourcesItem
 import com.route.newsappc31.Constants
-import com.route.newsappc31.NetworkAwareHandler
 import com.route.repositories.sources.NewsSourcesRepo
-import com.route.repositories.sources.OfflineSourcesRoomBased
-import com.route.repositories.sources.OnlineSourcesBasedRetroFit
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 
 /**
  * Created by Mohamed Nabil Mohamed on 3/27/2020.
  * m.nabil.fci2015@gmail.com
  */
-class HomeViewModel : ViewModel(){
+class HomeViewModel : ViewModel(),KoinComponent{
 
 
     lateinit var sourcesLiveData : MutableLiveData< List<SourcesItem>>
@@ -29,19 +28,10 @@ class HomeViewModel : ViewModel(){
     val messageStringLiveData = MutableLiveData<String>()
     val newsList =MutableLiveData<List<ArticlesItem?>>()
     val compositeDisposable = CompositeDisposable();
-    lateinit var networkAwareHandler:NetworkAwareHandler
-
-    lateinit var newsSourcesRepo:NewsSourcesRepo
+    val newsSourcesRepo:NewsSourcesRepo by inject()
 
     init {
-        networkAwareHandler =object :NetworkAwareHandler{
-            override fun isOnline(): Boolean {
-            return true;
-            }
-        }
 
-        newsSourcesRepo = NewsSourcesRepo(OfflineSourcesRoomBased(),OnlineSourcesBasedRetroFit(),
-            networkAwareHandler)
         sourcesLiveData = newsSourcesRepo.sourcesList
         newsSourcesRepo.getNewsSources()
     }
