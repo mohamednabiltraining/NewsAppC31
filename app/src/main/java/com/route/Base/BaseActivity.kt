@@ -20,13 +20,13 @@ open abstract class BaseActivity<T :ViewDataBinding  , V: ViewModel> :AppCompatA
     lateinit var activity: AppCompatActivity;
 
     lateinit var  viewDataBinding: T
-    lateinit var viewModel:V
+    lateinit var mviewModel:V
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity=this;
         viewDataBinding = DataBindingUtil.setContentView(this,getLayoutID())
-        viewModel = generateViewModel()
+        mviewModel = generateViewModel()
     }
 
     abstract fun generateViewModel():V

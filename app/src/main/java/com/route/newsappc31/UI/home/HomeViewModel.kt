@@ -12,14 +12,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 
 /**
  * Created by Mohamed Nabil Mohamed on 3/27/2020.
  * m.nabil.fci2015@gmail.com
  */
-class HomeViewModel : ViewModel(),KoinComponent{
+class HomeViewModel(val newsSourcesRepo:NewsSourcesRepo) : ViewModel( ),KoinComponent{
 
 
     lateinit var sourcesLiveData : MutableLiveData< List<SourcesItem>>
@@ -28,7 +27,7 @@ class HomeViewModel : ViewModel(),KoinComponent{
     val messageStringLiveData = MutableLiveData<String>()
     val newsList =MutableLiveData<List<ArticlesItem?>>()
     val compositeDisposable = CompositeDisposable();
-    val newsSourcesRepo:NewsSourcesRepo by inject()
+   // val newsSourcesRepo:NewsSourcesRepo by inject()
 
     init {
 

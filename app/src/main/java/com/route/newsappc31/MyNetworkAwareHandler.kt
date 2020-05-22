@@ -13,7 +13,7 @@ class MyNetworkAwareHandler(val context: Context) :NetworkAwareHandler{
     override fun isOnline(): Boolean {
 
 
-        return false;
+        return true;
     }
 
 }
