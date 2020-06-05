@@ -7,6 +7,8 @@ package com.route.newsappc31
  */
 class Constants {
     companion object{
+        val CHANNEL_ID= "news"
+        val FB_TOKEN = "fireBaseToken";
         val apiKey = "5909ae28122a471d8b0c237d5989cb73";
     }
 }

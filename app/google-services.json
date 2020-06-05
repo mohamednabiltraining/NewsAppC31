@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "93705567959",
+    "firebase_url": "https://routenews-ef120.firebaseio.com",
+    "project_id": "routenews-ef120",
+    "storage_bucket": "routenews-ef120.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93705567959:android:755b1aa076c2416965fa92",
+        "android_client_info": {
+          "package_name": "com.route.newsappc31"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "93705567959-ssob258ivkc2kosl8hnibqrvl67qemf9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQxPPcwgkPn5hUTeiXfM4MTsVcOHgybmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "93705567959-ssob258ivkc2kosl8hnibqrvl67qemf9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
