@@ -9,7 +9,7 @@ import com.route.model.SourcesItem
  */
 class OfflineSourcesRoomBased :NewsSourcesRepo.OfflineDataSource{
 
-    override fun getSources(): List<SourcesItem> {
+   suspend override fun getSources(): List<SourcesItem> {
         return listOf()
     }
 

@@ -9,7 +9,7 @@ import com.route.model.SourcesItem
  */
 class OfflineSourcesBasedSharedPreferences ():NewsSourcesRepo.OfflineDataSource{
 
-    override fun getSources(): List<SourcesItem> {
+    override suspend fun getSources(): List<SourcesItem> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

@@ -1,11 +1,7 @@
 package com.route.repositories.sources
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.route.model.SourcesItem
-import com.route.model.SourcesResponse
 import com.route.newsappc31.NetworkAwareHandler
-import io.reactivex.Single
 
 
 /**
@@ -15,29 +11,28 @@ import io.reactivex.Single
 class NewsSourcesRepo (val offlineDataSource: OfflineDataSource,
                        val onlineDataSource: OnlineDataSource,
                        val networkHandler:NetworkAwareHandler){
-    val sourcesList = MutableLiveData<List<SourcesItem>>()
-    fun getNewsSources():MutableLiveData<List<SourcesItem>>{
-        if (networkHandler.isOnline()){
-             onlineDataSource.getSources()
-                 .subscribe({
-                     sourcesList.value = it.sources?: listOf<SourcesItem>()
-                     if (it.sources!=null)
-                         offlineDataSource.cacheData(it.sources);
-                 },{
-                     Log.e("error",it.localizedMessage)
-                 })
-        }else {
-           val data = offlineDataSource.getSources();
-            sourcesList.value = data
-        }
-        return sourcesList;
+    suspend fun getNewsSources():List<SourcesItem>{
+
+
+                if (networkHandler.isOnline()) {
+                    val result = onlineDataSource.getSources();
+
+                    if (result != null)
+                        offlineDataSource.cacheData(result);
+
+                    return result.orEmpty()
+
+                } else {
+                    return offlineDataSource.getSources()
+                }
+
     }
 
     interface OnlineDataSource{
-        fun getSources():Single<SourcesResponse>
+        suspend fun getSources():List<SourcesItem>
     }
     interface OfflineDataSource{
-        fun getSources():List<SourcesItem>
+        suspend fun getSources():List<SourcesItem>
         fun cacheData(data: List<SourcesItem>)
     }
 }

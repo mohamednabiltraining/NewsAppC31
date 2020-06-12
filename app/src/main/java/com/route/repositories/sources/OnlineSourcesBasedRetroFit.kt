@@ -1,11 +1,8 @@
 package com.route.repositories.sources
 
 import com.route.Api.ApiManager
-import com.route.model.SourcesResponse
+import com.route.model.SourcesItem
 import com.route.newsappc31.Constants
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 
 /**
@@ -13,11 +10,10 @@ import io.reactivex.schedulers.Schedulers
  * m.nabil.fci2015@gmail.com
  */
 class OnlineSourcesBasedRetroFit :NewsSourcesRepo.OnlineDataSource{
-    override fun getSources(): Single<SourcesResponse> {
-        return ApiManager.getApis()
+    override suspend fun getSources(): List<SourcesItem> {
+        val response =  ApiManager.getApis()
             .getNewsSources(Constants.apiKey,"en")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        return response.sources.orEmpty()
 
     }
 }
